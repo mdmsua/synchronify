@@ -1,0 +1,31 @@
+{
+  "name": "synchronify",
+  "version": "1.0.0",
+  "description": "Syncronises Spotify library with external systems",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "test": "exit 0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mdmsua/synchronify.git"
+  },
+  "keywords": [
+    "spotify",
+    "mongodb",
+    "stitch"
+  ],
+  "author": "Dmytro Morozov <mdmsua@gmail.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/mdmsua/synchronify/issues"
+  },
+  "homepage": "https://github.com/mdmsua/synchronify#readme",
+  "dependencies": {
+    "express": "~4.17.1"
+  },
+  "devDependencies": {
+    "prettier": "~1.18.2"
+  }
+}
