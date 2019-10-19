@@ -22,6 +22,10 @@
     "url": "https://github.com/mdmsua/synchronify/issues"
   },
   "homepage": "https://github.com/mdmsua/synchronify#readme",
+  "engines": {
+    "node": "~12.12.0",
+    "npm": "~6.12.0"
+  },
   "dependencies": {
     "express": "~4.17.1"
   },
