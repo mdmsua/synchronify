@@ -4,7 +4,7 @@
   "description": "Syncronises Spotify library with external systems",
   "main": "index.js",
   "scripts": {
-    "build": "exit 0",
+    "build": "mkdir public",
     "test": "exit 0"
   },
   "repository": {
