@@ -6,18 +6,24 @@ const dotenv = require('dotenv');
 const cookieParser = require('cookie-parser');
 const { CronJob } = require('cron');
 const { MongoClient } = require('mongodb');
+const Sentry = require('@sentry/node');
 
 dotenv.config();
 
 const app = express();
 
-const client = new MongoClient(process.env.MONGO_CONNECTION_STRING, { useNewUrlParser: true, useUnifiedTopology: true });
+const client = new MongoClient(process.env.MONGO_CONNECTION_STRING, { useNewUrlParser: true, useUnifiedTopology: true, useRecoveryToken: true, retryReads: true, retryWrites: true, w: 'majority' });
 
 const port = process.env.PORT || 8080;
 const clientId = process.env.CLIENT_ID;
 const clientSecret = process.env.CLIENT_SECRET;
 
 const stateKey = 'spotify_auth_state';
+
+if (process.env.ENV !== 'dev') {
+  Sentry.init({ dsn: process.env.SENTRY_DSN });
+  app.use(Sentry.Handlers.requestHandler());
+}
 
 app.get('/', (req, res) => {
   const state = crypto.randomBytes(32).toString('hex');
@@ -53,13 +59,15 @@ app.get('/callback', cookieParser(), async (req, res) => {
   return res.sendStatus(200);
 });
 
-app.listen(port);
-
 if (process.env.ENV !== 'dev') {
+  app.use(Sentry.Handlers.errorHandler());
   new CronJob('0 * * * * *', async () => {
     await client.connect();
     const db = client.db('test');
+    await db.collection('timestamps').createIndex({ timestamp: -1 }, { background: true });
     await db.collection('timestamps').insertOne({ timestamp: new Date() });
     await client.close();
   }, null, true, 'Europe/Berlin');
 }
+
+app.listen(port);
