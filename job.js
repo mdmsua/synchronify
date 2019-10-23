@@ -14,7 +14,7 @@ async function onTick() {
     const timestamp = new Date();
     const [tracks, albums] = await Promise.all([syncTracks(id, accessToken), syncAlbums(id, accessToken)]);
     await mongoClient.saveLog(id, timestamp, new Date(), { tracks, albums });
-    console.log(tracks, albums);
+    console.log(`${id}: ${tracks} tracks, ${albums} albums`);
   }
 }
 
