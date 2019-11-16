@@ -1,0 +1,8 @@
+{
+    "app_id": "spotify-taivw",
+    "config_version": 20180301,
+    "name": "Spotify",
+    "location": "IE",
+    "deployment_model": "LOCAL",
+    "security": {}
+}

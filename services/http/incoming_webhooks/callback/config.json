@@ -1,0 +1,12 @@
+{
+    "id": "5dd02a8f89e11202f3ed6c0d",
+    "name": "callback",
+    "run_as_authed_user": false,
+    "run_as_user_id": "",
+    "run_as_user_id_script_source": "",
+    "options": {
+        "httpMethod": "GET",
+        "validationMethod": "NO_VALIDATION"
+    },
+    "respond_result": true
+}
