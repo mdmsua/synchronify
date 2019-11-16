@@ -1,0 +1,18 @@
+{
+    "id": "5dd05b997efaf107330ee00a",
+    "name": "sync",
+    "type": "DATABASE",
+    "config": {
+        "operation_types": [
+            "INSERT"
+        ],
+        "database": "spotify",
+        "collection": "access_tokens",
+        "service_name": "mongodb-atlas",
+        "match": {},
+        "full_document": true,
+        "unordered": true
+    },
+    "function_name": "sync",
+    "disabled": false
+}
