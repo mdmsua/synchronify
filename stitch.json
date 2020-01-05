@@ -4,5 +4,8 @@
     "name": "Spotify",
     "location": "IE",
     "deployment_model": "LOCAL",
-    "security": {}
+    "security": {},
+    "custom_user_data_config": {
+        "enabled": false
+    }
 }

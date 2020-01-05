@@ -1,17 +1,9 @@
 {
-    "id": "5dd05b997efaf107330ee00a",
+    "id": "5e12130dcde4883bf523cc49",
     "name": "sync",
-    "type": "DATABASE",
+    "type": "SCHEDULED",
     "config": {
-        "operation_types": [
-            "INSERT"
-        ],
-        "database": "spotify",
-        "collection": "access_tokens",
-        "service_name": "mongodb-atlas",
-        "match": {},
-        "full_document": true,
-        "unordered": true
+        "schedule": "0 0 * * *"
     },
     "function_name": "sync",
     "disabled": false

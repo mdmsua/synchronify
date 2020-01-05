@@ -57,9 +57,7 @@ exports = async function (payload, response) {
         const db = context.services
           .get('mongodb-atlas')
           .db('spotify');
-        await db.collection('access_tokens')
-          .updateOne({ _id: profile.id }, { $set: { token: accessToken, timestamp: new Date() } }, { upsert: true });
-        await db.collection('refresh_tokens')
+        await db.collection('tokens')
           .updateOne({ _id: profile.id }, { $set: { token: refreshToken, timestamp: new Date() } }, { upsert: true });
         response.setStatusCode(200);
         response.setHeader('Content-Type', 'text/plain');

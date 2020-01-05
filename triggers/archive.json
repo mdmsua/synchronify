@@ -1,0 +1,10 @@
+{
+    "id": "5e12130dcde4883bf523cc48",
+    "name": "archive",
+    "type": "SCHEDULED",
+    "config": {
+        "schedule": "0 12 * * *"
+    },
+    "function_name": "archive",
+    "disabled": false
+}
