@@ -19,10 +19,7 @@ async function getAccessToken(context, token) {
   console.error(statusCode, body.text());
 }
 
-exports = async function ({ documentKey }) {
-  const id = documentKey._id;
-  const db = context.services.get('mongodb-atlas').db('spotify');
-  const { token } = await db.collection('refresh_tokens').findOne({ _id: id });
+exports = async function (token) {
   const { access_token: accessToken } = await getAccessToken(context, token);
-  await db.collection('access_tokens').insertOne({ _id: id, token: accessToken, timestamp: new Date() });
+  return accessToken;
 }
