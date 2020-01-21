@@ -1,5 +1,8 @@
-exports = async function (details) {
+async function report(details) {
   const authorizationToken = context.values.get('authorizationToken');
+  const reportSender = context.values.get('reportSender');
+  const reportReceiver = context.values.get('reportReceiver');
+  const reportTemplate = context.values.get('reportTemplate');
   const total = { albums: 0, tracks: 0, playlists: 0, duration: 0 };
   details.forEach(({ albums, tracks, playlists, duration }) => {
     total.albums += albums;
@@ -9,13 +12,13 @@ exports = async function (details) {
   });
   const body = {
     from: {
-      email: 'syncify@mdmsua.com'
+      email: reportSender
     },
     personalizations: [
       {
         to: [
           {
-            email: 'mdmsua@gmail.com'
+            email: reportReceiver
           }
         ],
         dynamic_template_data: {
@@ -24,7 +27,7 @@ exports = async function (details) {
         }
       }
     ],
-    template_id: 'd-d72ce9f74a5f465e9f3a6d6502a2b35e'
+    template_id: reportTemplate
   }
   await context.http.post({
     url: 'https://api.sendgrid.com/v3/mail/send',
@@ -35,3 +38,9 @@ exports = async function (details) {
     }
   });
 };
+
+exports = report;
+
+if (process.env.TEST) {
+  module.exports = report;
+}
