@@ -31,6 +31,7 @@ async function sync(resource, collection, http, token, mapper) {
 
 exports = async function () {
   const tokens = await context.services.get('mongodb-atlas').db('spotify').collection('tokens').find().toArray();
+  const report = [];
   await Promise.all(tokens.map(async ({ _id: id, token: refresh }) => {
     const db = context.services.get('mongodb-atlas').db(id);
     const tracksCollection = db.collection('tracks');
@@ -39,12 +40,22 @@ exports = async function () {
     const logsCollection = db.collection('logs');
     const token = await context.functions.execute('refresh', refresh);
     await context.functions.execute('archive', id);
-    const timestamp = new Date();
+    const started = new Date();
     const [albums, tracks, playlists] = await Promise.all([
       sync('albums', albumsCollection, context.http, token, item => { item._id = item.album.id; return item; }),
       sync('tracks', tracksCollection, context.http, token, item => { item._id =  item.track.id; return item; }),
       sync('playlists', playlistsCollection, context.http, token, item => { item._id = item.id; return item; })
     ]);
-    await logsCollection.insertOne({ started: timestamp, finished: new Date(), duration: new Date() - timestamp, tracks, albums, playlists });
+    const finished = new Date();
+    const duration = finished - started;
+    report.push({
+      id,
+      duration,
+      albums,
+      tracks,
+      playlists
+    });
+    await logsCollection.insertOne({ started, finished, duration, tracks, albums, playlists });
   }));
+  await context.functions.execute('report', report);
 }
