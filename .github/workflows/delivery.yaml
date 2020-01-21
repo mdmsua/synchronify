@@ -1,0 +1,16 @@
+name: delivery
+on:
+  push:
+    branches:
+    - 'master'
+jobs:
+  deploy:
+    name: deploy
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/setup-node@v1
+        with:
+          node-version: '12.x'
+      - run: npm install -g mongodb-stitch-cli
+      - run: stitch-cli login --api-key ${{ secrets.API_KEY }} --private-api-key ${{ secrets.PRIVATE_API_KEY }} --yes
+      - run: stitch-cli import --app-id ${{ secrets.APP_ID }} --yes
