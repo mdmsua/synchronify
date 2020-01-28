@@ -5,10 +5,15 @@ using Microsoft.Extensions.Logging;
 
 namespace Syncify
 {
-    public static class Sync
+    public class Cron
     {
-        [FunctionName("Sync")]
-        public static void Run([TimerTrigger("0 0 0 * * *")]TimerInfo myTimer, ILogger log)
+        public Cron()
+        {
+
+        }
+
+        [FunctionName("Refresh")]
+        public static void Run([TimerTrigger("0 0 * * * *")] TimerInfo timer, ILogger log)
         {
             log.LogInformation($"C# Timer trigger function executed at: {DateTime.Now}");
         }

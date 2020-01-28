@@ -34,6 +34,6 @@ namespace Syncify.Models
 
         [JsonPropertyName("tracks")]
         [BsonElement("tracks")]
-        public Page<SavedTrack>? Tracks { get; set; }
+        public Page<TrackBase>? Tracks { get; set; }
     }
 }
