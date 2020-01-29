@@ -18,7 +18,7 @@ jobs:
       - run: echo "deb [arch=amd64] https://packages.microsoft.com/repos/azure-cli/ $(lsb_release -cs) main" | sudo tee /etc/apt/sources.list.d/azure-cli.list
       - run: echo "deb [arch=amd64] https://packages.microsoft.com/repos/azurecore/ $(lsb_release -cs) main" | sudo tee /etc/apt/sources.list.d/azurecore.list
       - run: sudo apt-get update
-      - run: sudo apt-get install --yes azure-cli azure-functions-core-tools
+      - run: sudo apt-get install --yes azure-cli azure-functions-core-tools=3\*
       - run: az login --service-principal -u "${{ secrets.APP_ID }}" -p "${{ secrets.PASSWORD }}" --tenant "${{ secrets.TENANT }}"
       - name: publish
         run: func azure functionapp publish syncify
