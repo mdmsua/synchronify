@@ -15,8 +15,10 @@ jobs:
       - run: sudo apt-get install --yes ca-certificates curl apt-transport-https lsb-release gnupg
       - run: curl -sL https://packages.microsoft.com/keys/microsoft.asc | gpg --dearmor | sudo tee /etc/apt/trusted.gpg.d/microsoft.asc.gpg > /dev/null
       - run: echo "deb [arch=amd64] https://packages.microsoft.com/repos/azure-cli/ $(lsb_release -cs) main" | sudo tee /etc/apt/sources.list.d/azure-cli.list
-      - run: sudo sh -c 'echo "deb [arch=amd64] https://packages.microsoft.com/repos/microsoft-ubuntu-$(lsb_release -cs)-prod $(lsb_release -cs) main" > /etc/apt/sources.list.d/dotnetdev.list'
+      - run: echo "deb [arch=amd64] https://packages.microsoft.com/repos/azurecore/ $(lsb_release -cs) main" | sudo tee /etc/apt/sources.list.d/azurecore.list
       - run: sudo apt-get update
       - run: sudo apt-get install --yes azure-cli azure-functions-core-tools
       - run: az login --service-principal -u "${{ secrets.APP_ID }}" -p "${{ secrets.PASSWORD }}" --tenant "${{ secrets.TENANT }}"
-      - run: func azure functionapp publish syncify
+      - name: publish
+        run: func azure functionapp publish syncify
+        working-directory: sources/Syncify
