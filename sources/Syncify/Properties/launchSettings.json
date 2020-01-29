@@ -1,0 +1,13 @@
+{
+  "profiles": {
+    "Syncify": {
+      "commandName": "Project",
+      "environmentVariables": {
+        "AZURE_CLIENT_SECRET": "R9AeO2-saIy-ATc=c:GVY2hxqljxfmY1",
+        "AZURE_CLIENT_ID": "54e8d067-1587-4b5b-92b9-58444599711c",
+        "ASPNETCORE_ENVIRONMENT": "Development",
+        "AZURE_TENANT_ID": "756e1a04-7ed6-48f3-a7a0-6837764769bf"
+      }
+    }
+  }
+}

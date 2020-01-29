@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Logging;
 using Syncify.Models;
-using Syncify.Repositories;
+using Syncify.Providers;
 
 namespace Syncify.Services
 {
@@ -16,15 +16,15 @@ namespace Syncify.Services
 
         private readonly MemoryCache memoryCache;
         private readonly IHttpClientFactory clientFactory;
-        private readonly IAuthorizationService authorizationService;
+        private readonly ITokenProvider tokenProvider;
         private readonly ILogger<HttpClientService> logger;
         private bool disposed;
 
-        public HttpClientService(MemoryCache memoryCache, IHttpClientFactory clientFactory, IAuthorizationService authorizationService, ILogger<HttpClientService> logger)
+        public HttpClientService(MemoryCache memoryCache, IHttpClientFactory clientFactory, ITokenProvider tokenProvider, ILogger<HttpClientService> logger)
         {
             this.memoryCache = memoryCache;
             this.clientFactory = clientFactory;
-            this.authorizationService = authorizationService;
+            this.tokenProvider = tokenProvider;
             this.logger = logger;
         }
 
@@ -36,7 +36,12 @@ namespace Syncify.Services
 
         public async Task<HttpClient> GetHttpClientAsync(Token token)
         {
-            if (token.Id == string.Empty)
+            if (token is null)
+            {
+                throw new ArgumentNullException(nameof(token));
+            }
+
+            if (token.Id.Length == 0)
             {
                 logger.LogInformation("Creating client for initial request");
                 return CreateHttpClient(token.AccessToken);
@@ -45,11 +50,11 @@ namespace Syncify.Services
             using var scope = logger.BeginScope("Serving client for {id}", token.Id);
             return await memoryCache.GetOrCreateAsync(token.Id, async entry =>
             {
-                logger.LogInformation("Cache exprired. Refreshing token...");
-                await authorizationService.RefreshTokenAsync(token);
+                logger.LogInformation("Cache exprired. Requesting token...");
+                var refreshedToken = await tokenProvider.GetTokenAsync(token.Id);
 
-                logger.LogInformation("Token refreshed. Creating client...");
-                var client = CreateHttpClient(token.AccessToken);
+                logger.LogInformation("Token requested. Creating client...");
+                var client = CreateHttpClient(refreshedToken.AccessToken);
 
                 return client;
             });

@@ -1,9 +1,11 @@
-﻿using System.Text.Json.Serialization;
+﻿using System;
+using System.Text.Json.Serialization;
 
 namespace Syncify.Models
 {
     public class Token
     {
+        [JsonIgnore]
         public string Id { get; set; } = string.Empty;
 
         [JsonPropertyName("access_token")]
@@ -20,6 +22,9 @@ namespace Syncify.Models
 
         [JsonPropertyName("expires_in")]
         public int Expiration { get; set; }
+
+        [JsonIgnore]
+        public DateTimeOffset ExpiresOn => DateTimeOffset.Now.AddSeconds(Expiration);
 
         public void Deconstruct(out string id, out string value, out string type, out string scope, out int expiration)
         {

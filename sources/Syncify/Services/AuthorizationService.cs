@@ -4,7 +4,6 @@ using System.Linq;
 using System.Net.Http;
 using System.Text.Json;
 using System.Threading.Tasks;
-using System.Web;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Options;
 using Syncify.Models;
@@ -24,6 +23,11 @@ namespace Syncify.Services
 
         public AuthorizationService(IOptions<SpotifyOptions> options, IHttpContextAccessor contextAccessor, HttpClient client)
         {
+            if (options?.Value is null)
+            {
+                throw new ArgumentNullException(nameof(options.Value));
+            }
+
             this.client = client;
             this.options = options.Value;
             this.contextAccessor = contextAccessor;
@@ -39,18 +43,18 @@ namespace Syncify.Services
 
         public async Task<Token> GetTokenAsync(string code)
         {
-            var content = new FormUrlEncodedContent(new Dictionary<string, string> { { "code", code }, { "redirect_uri", options.RedirectUri.AbsoluteUri }, { "grant_type", "authorization_code" } });
-            var message = await client.PostAsync("/api/token", content);
+            using var content = new FormUrlEncodedContent(new Dictionary<string, string> { { "code", code }, { "redirect_uri", options.RedirectUri.AbsoluteUri }, { "grant_type", "authorization_code" } });
+            using var message = await client.PostAsync("/api/token", content).ConfigureAwait(false);
             message.EnsureSuccessStatusCode();
-            return await JsonSerializer.DeserializeAsync<Token>(await message.Content.ReadAsStreamAsync());
+            return await JsonSerializer.DeserializeAsync<Token>(await message.Content.ReadAsStreamAsync().ConfigureAwait(false));
         }
 
         public async Task RefreshTokenAsync(Token token)
         {
-            var content = new FormUrlEncodedContent(new Dictionary<string, string> { { "grant_type", "refresh_token" }, { "refresh_token", token.RefreshToken } });
-            var message = await client.PostAsync("/api/token", content);
+            using var content = new FormUrlEncodedContent(new Dictionary<string, string> { { "grant_type", "refresh_token" }, { "refresh_token", token.RefreshToken } });
+            using var message = await client.PostAsync("/api/token", content).ConfigureAwait(false);
             message.EnsureSuccessStatusCode();
-            var (_, value, type, scope, expiration) = await JsonSerializer.DeserializeAsync<Token>(await message.Content.ReadAsStreamAsync());
+            var (_, value, type, scope, expiration) = await JsonSerializer.DeserializeAsync<Token>(await message.Content.ReadAsStreamAsync().ConfigureAwait(false));
             token.AccessToken = value;
             token.Type = type;
             token.Scope = scope;

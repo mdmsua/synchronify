@@ -1,8 +1,9 @@
-using System;
+﻿using System;
 using System.Net.Http.Headers;
 using System.Text;
 using Azure.Identity;
 using Azure.Security.KeyVault.Secrets;
+using Microsoft.Azure.Cosmos.Table;
 using Microsoft.Azure.Functions.Extensions.DependencyInjection;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -10,8 +11,11 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using MongoDB.Driver;
 using Syncify.Options;
-using Syncify.Repositories;
+using Syncify.Stores;
 using Syncify.Services;
+using Syncify.Handlers;
+using Azure.Core;
+using Syncify.Providers;
 
 [assembly: FunctionsStartup(typeof(Syncify.Startup))]
 
@@ -41,11 +45,23 @@ namespace Syncify
             });
             builder.Services.AddSingleton<IHttpClientService, HttpClientService>();
             builder.Services.AddSingleton<ILibraryService, LibraryService>();
-            builder.Services.AddSingleton<ITokenRepository, TokenRepository>();
+            builder.Services.AddSingleton<ITokenStore, TokenStore>();
+            builder.Services.AddSingleton<ITokenProvider, TokenProvider>();
+            builder.Services.AddSingleton<IUserStore, UserStore>();
+            builder.Services.AddSingleton<IHttpHandler, HttpHandler>();
+            builder.Services.AddSingleton<ICronHandler, CronHandler>();
             builder.Services.AddSingleton(provider =>
             {
                 var options = provider.GetRequiredService<IOptions<KeyVaultOptions>>();
-                return new SecretClient(new Uri($"https://{options.Value.Name}.vault.azure.net"), new DefaultAzureCredential(false));
+                var isProduction = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") == "Production";
+                TokenCredential tokenCredential = isProduction ? new DefaultAzureCredential() : (TokenCredential)new EnvironmentCredential();
+                return new SecretClient(new Uri($"https://{options.Value.Name}.vault.azure.net"), tokenCredential);
+            });
+            builder.Services.AddSingleton(provider =>
+            {
+                var configuration = provider.GetRequiredService<IConfiguration>();
+                var connectionString = configuration.GetConnectionString("Storage");
+                return CloudStorageAccount.Parse(connectionString).CreateCloudTableClient();
             });
         }
     }

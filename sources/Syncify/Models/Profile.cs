@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json.Serialization;
@@ -9,7 +9,6 @@ namespace Syncify.Models
     public class Profile
     {
         [JsonPropertyName("country")]
-        [BsonElement("country")]
         public string Country { get; set; } = string.Empty;
 
         [JsonPropertyName("display_name")]
