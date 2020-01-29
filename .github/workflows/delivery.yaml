@@ -2,16 +2,21 @@ name: delivery
 on:
   push:
     branches:
-    - 'master'
+    - 'dotnet'
 jobs:
   deploy:
     name: deploy
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/setup-node@v1
+      - uses: actions/setup-dotnet@v1
         with:
-          node-version: '12.x'
-      - run: npm install -g mongodb-stitch-cli
-      - run: stitch-cli login --api-key ${{ secrets.API_KEY }} --private-api-key ${{ secrets.PRIVATE_API_KEY }} --yes
-      - run: echo "${{ secrets.APP_ID }}"
-      - run: stitch-cli import --app-id ${{ secrets.APP_ID }} --yes
+          dotnet-version: 3.1.101
+      - run: sudo apt-get update
+      - run: sudo apt-get install --yes ca-certificates curl apt-transport-https lsb-release gnupg
+      - run: curl -sL https://packages.microsoft.com/keys/microsoft.asc | gpg --dearmor | sudo tee /etc/apt/trusted.gpg.d/microsoft.asc.gpg > /dev/null
+      - run: echo "deb [arch=amd64] https://packages.microsoft.com/repos/azure-cli/ $(lsb_release -cs) main" | sudo tee /etc/apt/sources.list.d/azure-cli.list
+      - run: sudo sh -c 'echo "deb [arch=amd64] https://packages.microsoft.com/repos/microsoft-ubuntu-$(lsb_release -cs)-prod $(lsb_release -cs) main" > /etc/apt/sources.list.d/dotnetdev.list'
+      - run: sudo apt-get update
+      - run: sudo apt-get install --yes azure-cli azure-functions-core-tools
+      - run: az login --service-principal -u "${{ secrets.APP_ID }}" -p "${{ secrets.PASSWORD }}" --tenant "${{ secrets.TENANT }}"
+      - run: func azure functionapp publish syncify
