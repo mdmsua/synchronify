@@ -1,9 +1,11 @@
-
+﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Syncify", "sources\Syncify\Syncify.csproj", "{172E856E-64A2-4D4C-9F25-92AE14A946F7}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Syncify.Functions", "sources\Syncify.Functions\Syncify.Functions.csproj", "{172E856E-64A2-4D4C-9F25-92AE14A946F7}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Syncify.Tests", "sources\Syncify.Tests\Syncify.Tests.csproj", "{56C8B9FE-1CB8-4A10-A057-4E14310BD6E3}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Syncify.Core.Tests", "sources\Syncify.Core.Tests\Syncify.Core.Tests.csproj", "{56C8B9FE-1CB8-4A10-A057-4E14310BD6E3}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Syncify.Core", "sources\Syncify.Core\Syncify.Core.csproj", "{F38086A0-A63B-4A20-8F0B-33DA987C9897}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -19,5 +21,11 @@ Global
 		{56C8B9FE-1CB8-4A10-A057-4E14310BD6E3}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{56C8B9FE-1CB8-4A10-A057-4E14310BD6E3}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{56C8B9FE-1CB8-4A10-A057-4E14310BD6E3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F38086A0-A63B-4A20-8F0B-33DA987C9897}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F38086A0-A63B-4A20-8F0B-33DA987C9897}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F38086A0-A63B-4A20-8F0B-33DA987C9897}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F38086A0-A63B-4A20-8F0B-33DA987C9897}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
 	EndGlobalSection
 EndGlobal

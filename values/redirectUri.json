@@ -1,6 +1,0 @@
-{
-    "id": "5dd02a9089e11202f3ed6c8e",
-    "name": "redirectUri",
-    "value": "https://eu-west-1.aws.webhooks.mongodb-stitch.com/api/client/v2.0/app/spotify-taivw/service/http/incoming_webhook/callback",
-    "from_secret": false
-}
